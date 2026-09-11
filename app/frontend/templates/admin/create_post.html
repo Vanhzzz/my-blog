@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+
+<link rel="stylesheet" href="{{ url_for('static', path='/css/admin.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admin-layout">
+
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-sidebar-title">
+            Admin Panel
+        </div>
+
+
+        <nav class="admin-menu">
+
+            <a href="/admin" class="admin-menu-item">
+                Dashboard
+            </a>
+
+
+            <a href="/admin/posts" class="admin-menu-item">
+                Posts
+            </a>
+
+            <a href="/admin/posts/drafts" class="admin-menu-item">
+                Drafts
+            </a>
+
+            <a href="/admin/posts/create" class="admin-menu-item active">
+                Create Post
+            </a>
+
+
+            <a href="/admin/users" class="admin-menu-item">
+                Users
+            </a>
+
+
+            <div class="admin-menu-divider">
+            </div>
+
+
+            <a href="/" class="admin-menu-item">
+                ← Back to Site
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <section class="admin-content">
+
+
+        <div id="post-editor" class="post-editor" data-draft-id="{% if draft %}{{ draft.id }}{% endif %}">
+
+
+            <div class="admin-page-header post-editor-header">
+
+                <div>
+
+                    <h1>
+                        {% if draft %}
+                        Edit Draft
+                        {% else %}
+                        Create New Post
+                        {% endif %}
+                    </h1>
+
+                    <p>
+                        Write your post. Changes are saved automatically.
+                    </p>
+
+                </div>
+
+
+                <div class="editor-save-status">
+
+                    <span id="save-status-dot" class="save-status-dot">
+                    </span>
+
+                    <span id="save-status">
+                        {% if draft %}
+                        Saved
+                        {% else %}
+                        Not saved
+                        {% endif %}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="post-editor-grid">
+
+
+                <section class="admin-panel post-editor-main">
+
+
+                    <div class="post-form">
+
+
+                        <div class="post-form-group">
+
+                            <label for="post-title">
+                                Title
+                            </label>
+
+                            <input type="text" id="post-title" maxlength="255" placeholder="Enter post title"
+                                value="{% if draft and draft.title %}{{ draft.title }}{% endif %}">
+
+                        </div>
+
+
+
+                        <div class="post-form-group">
+
+                            <label for="post-slug">
+                                Slug
+                            </label>
+
+                            <div class="slug-input-row">
+
+                                <span>
+                                    /blog/
+                                </span>
+
+                                <input type="text" id="post-slug" maxlength="255" placeholder="my-post-slug"
+                                    value="{% if draft and draft.slug %}{{ draft.slug }}{% endif %}">
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="post-form-group">
+
+                            <label for="post-summary">
+                                Summary
+                            </label>
+
+                            <textarea id="post-summary" rows="4"
+                                placeholder="Short description of the post">{% if draft and draft.summary %}{{ draft.summary }}{% endif %}</textarea>
+
+                        </div>
+
+
+
+                        <div class="post-form-group">
+
+                            <label for="post-category">
+                                Category
+                            </label>
+
+                            <input type="text" id="post-category" maxlength="100" placeholder="Example: Web Security"
+                                value="{% if draft and draft.category %}{{ draft.category }}{% endif %}">
+
+                        </div>
+
+
+
+                        <div class="post-form-group">
+
+                            <div class="content-label-row">
+
+                                <div>
+
+                                    <label for="post-content">
+                                        Content
+                                    </label>
+
+                                    <span>
+                                        Markdown supported
+                                    </span>
+
+                                </div>
+
+
+                                <div class="editor-tools">
+
+                                    <button type="button" id="insert-code-button" class="editor-tool-button">
+                                        Code
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <textarea id="post-content" class="post-content-editor"
+                                placeholder="Write your post in Markdown...">{% if draft and draft.content %}{{ draft.content }}{% endif %}</textarea>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+
+                <aside class="post-editor-side">
+
+
+                    <section class="admin-panel editor-side-panel">
+
+                        <h2>
+                            Publish
+                        </h2>
+
+
+                        <div class="publish-info">
+
+                            <div>
+
+                                <span>
+                                    Status
+                                </span>
+
+                                <strong>
+                                    Draft
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Author
+                                </span>
+
+                                <strong>
+                                    {{ current_user.username }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="publish-actions">
+
+                            <button type="button" id="preview-button" class="admin-secondary-button">
+                                Open Preview
+                            </button>
+
+
+                            <button type="button" id="publish-button" class="admin-primary-button publish-button">
+                                Publish
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+
+                    <section class="admin-panel editor-side-panel">
+
+                        <h2>
+                            Cover Image
+                        </h2>
+
+                        <p class="editor-help-text">
+                            Image upload will be connected to
+                            Vercel Blob in the next step.
+                        </p>
+
+
+                        {% if draft and draft.cover_image_url %}
+
+                        <div class="cover-preview">
+
+                            <img src="{{ draft.cover_image_url }}" alt="Post cover">
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <input type="hidden" id="cover-image-url"
+                            value="{% if draft and draft.cover_image_url %}{{ draft.cover_image_url }}{% endif %}">
+
+                    </section>
+
+
+
+                    <section class="admin-panel editor-side-panel">
+
+                        <h2>
+                            Markdown Help
+                        </h2>
+
+                        <div class="markdown-help">
+
+                            <code># Heading</code>
+
+                            <code>## Subheading</code>
+
+                            <code>**Bold**</code>
+
+                            <code>[Link](https://...)</code>
+
+                            <code>![Image](https://...)</code>
+
+                            <code>```python</code>
+
+                        </div>
+
+                    </section>
+
+
+                </aside>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static', path='/js/admin_create_post.js') }}" defer></script>
+
+{% endblock %}

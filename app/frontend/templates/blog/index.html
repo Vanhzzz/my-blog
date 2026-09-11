@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+
+<link rel="stylesheet" href="{{ url_for('static', path='/css/blog.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="blog-page">
+
+    <header class="blog-header">
+
+        <div>
+
+            <p class="blog-eyebrow">
+                MY BLOG
+            </p>
+
+            <h1>
+                Latest Posts
+            </h1>
+
+            <p>
+                Thoughts, tutorials and stories from my journey.
+            </p>
+
+        </div>
+
+
+        <div class="blog-search">
+
+            <input type="text" placeholder="Search posts...">
+
+            <button type="button">
+                Search
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <div class="post-grid">
+
+        {% for post in posts %}
+
+        <article class="post-card">
+
+            <div class="post-cover">
+
+                <span>
+                    {{ post.category }}
+                </span>
+
+            </div>
+
+
+            <div class="post-content">
+
+                <span class="post-category">
+                    {{ post.category }}
+                </span>
+
+                <h2>
+                    {{ post.title }}
+                </h2>
+
+                <p class="post-summary">
+                    {{ post.summary }}
+                </p>
+
+
+                <div class="post-meta">
+
+                    <span>
+                        {{ post.date }}
+                    </span>
+
+                    <span>
+                        {{ post.read_time }}
+                    </span>
+
+                </div>
+
+
+                <a href="/blog/{{ post.slug }}" class="read-post">Read article →</a>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

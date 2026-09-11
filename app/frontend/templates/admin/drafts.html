@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+
+<link rel="stylesheet" href="{{ url_for('static', path='/css/admin.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admin-layout">
+
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-sidebar-title">
+            Admin Panel
+        </div>
+
+
+        <nav class="admin-menu">
+
+            <a href="/admin" class="admin-menu-item">
+                Dashboard
+            </a>
+
+
+            <a href="/admin/posts" class="admin-menu-item">
+                Posts
+            </a>
+
+
+            <a href="/admin/posts/drafts" class="admin-menu-item active">
+                Drafts
+            </a>
+
+
+            <a href="/admin/posts/create" class="admin-menu-item">
+                Create Post
+            </a>
+
+
+            <a href="/admin/users" class="admin-menu-item">
+                Users
+            </a>
+
+
+            <div class="admin-menu-divider">
+            </div>
+
+
+            <a href="/" class="admin-menu-item">
+                ← Back to Site
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+
+    <section class="admin-content">
+
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <h1>
+                    Drafts
+                </h1>
+
+                <p>
+                    Continue writing unfinished posts
+                    or pending edits.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <section class="admin-panel">
+
+
+            <div class="admin-panel-header">
+
+                <div>
+
+                    <h2>
+                        Saved Drafts
+                    </h2>
+
+                    <p>
+                        Drafts are automatically saved
+                        while you write.
+                    </p>
+
+                </div>
+
+
+                <a href="/admin/posts/create" class="admin-primary-button">
+                    + Create New Post
+                </a>
+
+            </div>
+
+
+
+            {% if drafts %}
+
+            <div class="admin-table-wrapper">
+
+                <table class="admin-table drafts-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Title
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Author
+                            </th>
+
+                            <th>
+                                Slug
+                            </th>
+
+                            <th>
+                                Last Updated
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for draft, author_username in drafts %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <strong class="draft-title">
+
+                                    {% if draft.title %}
+                                    {{ draft.title }}
+                                    {% else %}
+                                    Untitled Draft
+                                    {% endif %}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if draft.post_id %}
+
+                                <span class="draft-type edit">
+                                    Post Edit
+                                </span>
+
+                                {% else %}
+
+                                <span class="draft-type new">
+                                    New Post
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ author_username }}
+                            </td>
+
+
+                            <td>
+
+                                {% if draft.slug %}
+                                {{ draft.slug }}
+                                {% else %}
+                                —
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ draft.updated_at }}
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a href="/admin/posts/drafts/{{ draft.id }}/edit" class="edit-button">
+                                        Continue
+                                    </a>
+
+                                    <a href="/admin/posts/drafts/{{ draft.id }}/preview" class="edit-button"
+                                        target="_blank">
+                                        Preview
+                                    </a>
+
+                                    <button type="button" class="delete-draft-button" data-draft-id="{{ draft.id }}"
+                                        data-draft-title="{% if draft.title %}{{ draft.title }}{% else %}Untitled Draft{% endif %}">
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <h3>
+                    No drafts
+                </h3>
+
+                <p>
+                    You currently have no saved drafts.
+                </p>
+
+                <a href="/admin/posts/create" class="admin-primary-button">
+                    Create Post
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </section>
+
+
+    </section>
+
+
+</div>
+
+{% block scripts %}
+
+<script src="{{ url_for('static', path='/js/admin_drafts.js') }}" defer></script>
+
+{% endblock %}
+
+{% endblock %}

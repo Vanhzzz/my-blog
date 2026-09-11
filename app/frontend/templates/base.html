@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if title %}
+        {{ title }} · My Blog
+        {% else %}
+        My Blog
+        {% endif %}
+    </title>
+
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/main.css') }}">
+
+    {% block styles %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <header class="site-header">
+
+        <div class="nav-container">
+
+
+            <a href="/" class="brand">
+                My Blog
+            </a>
+
+
+            <nav class="main-nav">
+
+                <a href="/">
+                    Home
+                </a>
+
+                <a href="/blog">
+                    Blog
+                </a>
+
+                <a href="/about">
+                    About
+                </a>
+
+            </nav>
+
+
+            <div class="auth-nav">
+
+                {% if current_user %}
+
+
+                {% if current_user.role == "admin" %}
+
+                <a href="/admin" class="admin-link">
+                    Admin
+                </a>
+
+                {% endif %}
+
+
+                <a href="/profile" class="nav-user">
+
+                    <span class="user-avatar">
+                        {{ current_user.username[0] | upper }}
+                    </span>
+
+                    <span class="user-name">
+                        {{ current_user.username }}
+                    </span>
+
+                </a>
+
+
+                <form method="POST" action="/logout" class="logout-form">
+
+                    <button type="submit" class="logout-button">
+                        Logout
+                    </button>
+
+                </form>
+
+
+                {% else %}
+
+
+                <a href="/login" class="login-link">
+                    Login
+                </a>
+
+                <a href="/register" class="register-button">
+                    Register
+                </a>
+
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <main class="site-main">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+
+    <footer class="site-footer">
+
+        <div class="footer-container">
+
+            <span>
+                © 2026 My Blog
+            </span>
+
+            <span>
+                Built with FastAPI & Jinja2
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    {% block scripts %}
+    {% endblock %}
+
+
+</body>
+
+</html>

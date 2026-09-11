@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+
+<link rel="stylesheet" href="{{ url_for('static', path='/css/blog.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<article class="blog-detail">
+
+    <a href="/blog" class="back-to-blog">
+        ← Back to blog
+    </a>
+
+
+    <header class="article-header">
+
+        <span class="post-category">
+            {{ post.category }}
+        </span>
+
+        <h1>
+            {{ post.title }}
+        </h1>
+
+        <div class="article-meta">
+
+            <span>
+                {{ post.date }}
+            </span>
+
+            <span>
+                {{ post.read_time }}
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <div class="article-cover">
+        {{ post.category }}
+    </div>
+
+
+    <div class="article-layout">
+
+        <div class="article-content">
+
+            {% for paragraph in post.content.strip().split('\n\n') %}
+
+            <p>
+                {{ paragraph }}
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <aside class="article-sidebar">
+
+            <div class="author-card">
+
+                <div class="author-avatar">
+                    V
+                </div>
+
+                <span>
+                    Written by
+                </span>
+
+                <strong>
+                    Vanhzzz
+                </strong>
+
+                <p>
+                    Security learner & developer.
+                </p>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</article>
+
+{% endblock %}
